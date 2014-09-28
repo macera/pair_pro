@@ -7,16 +7,21 @@ class Player
   end
 
   def add(card)
-    #x = card
-    #x = change(x)
-    #@sum += x
     @cards << card
   end
 
   def calc
     sum = 0
+    a_count = 0
     cards.each do |n|
-      sum += change(n, sum)
+      a_count += 1 if n == 'A' #Aの枚数を数える
+      sum += change(n)
+    end
+    # Aは都合の良い数を選ぶ
+    a_count.times do
+      if sum <= 11
+        sum += 10
+      end
     end
     @sum = sum
   end
@@ -41,17 +46,13 @@ class Player
     end
   end
 
-  def change(card, sum)
+  def change(card)
     case card
     when 'J','Q','K'
       card = 10
     when 'A'
-      sum += 11
-      if sum > 21
-        card = 1
-      else
-        card = 11
-      end
+      # 1か11にするかは後の合計で判断
+      card = 1
     end
     card
   end
@@ -159,25 +160,25 @@ class Game
     # カードの合計値が21に近い方が勝ち
     if player.sum > master.sum
       #
-      p "あなたはディーラーに勝利した！"
+      puts "あなたはディーラーに勝利した！"
     elsif player.sum == master.sum
       # Aと「10」または絵札の組み合わせが最も強い
       if player.black_jack? and master.black_jack?
-        p "引き分け"
+        puts "引き分け"
       elsif player.black_jack?
-        p "あなたはディーラーに勝利した！"
+        puts "あなたはディーラーに勝利した！"
       elsif master.black_jack?
-        p "あなたの負けてしまった..."
+        puts "あなたの負けてしまった..."
       else
-        p "引き分け"
+        puts "引き分け"
       end
     else
-      p "あなたの負けてしまった..."
+      puts "あなたの負けてしまった..."
     end
 
   end
 
 end
 
-# puts "NEW GAME"
-# Game.new
+puts "NEW GAME"
+Game.new
